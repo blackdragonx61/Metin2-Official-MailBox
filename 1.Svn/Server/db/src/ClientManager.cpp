@@ -18,6 +18,14 @@
 #endif
 
 //Find
+	sys_log(0, "MainLoop exited, Starting cache flushing");
+
+///Add
+#if defined(__BL_MAILBOX__)
+	CClientManager::instance().MAILBOX_BACKUP();
+#endif
+
+//Find
 void CClientManager::QUERY_PLAYER_COUNT(CPeer * pkPeer, TPlayerCountPacket * pPacket)
 {
 	...
