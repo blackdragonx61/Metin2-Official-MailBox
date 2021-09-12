@@ -441,7 +441,7 @@ bool CMailBox::GetItem(const BYTE data_idx, const bool bAll)
 	Owner->GiveGold(TotalYang);
 
 #if defined(WJ_CHEQUE_SYSTEM)
-	ch->GiveCheque(mail.AddData.iWon);
+	Owner->GiveCheque(mail.AddData.iWon);
 #endif
 
 	mail.AddData.iYang = 0;
