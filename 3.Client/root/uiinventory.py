@@ -7,7 +7,7 @@
 
 # Add
 				elif app.BL_MAILBOX and onTopWnd == player.ON_TOP_WND_MAILBOX:
-					if self.interface.MarkUnusableDSInvenSlotOnTopWnd(onTopWnd, localIndex, player.INVENTORY):
+					if self.interface.MarkUnusableDSInvenSlotOnTopWnd(onTopWnd, slotNumber, player.INVENTORY):
 						self.wndItem.SetUnusableSlotOnTopWnd(localIndex)
 					else:
 						self.wndItem.SetUsableSlotOnTopWnd(localIndex)
