@@ -1,5 +1,5 @@
 //Find
-typedef std::map<DWORD, TItemTable *> ItemTableVNumMap;
+size_t CreatePlayerSaveQuery(char * pszQuery, size_t querySize, TPlayerTable * pkTab);
 
 ///Add
 #if defined(__BL_MAILBOX__)
