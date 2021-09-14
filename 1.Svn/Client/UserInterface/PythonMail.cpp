@@ -218,21 +218,6 @@ void initmail()
 
 	PyObject* poModule = Py_InitModule("mail", s_methods);
 
-	void initmail()
-{
-	static PyMethodDef s_methods[] =
-	{
-		{ "GetMailAddData",				mailGetMailAddData,						METH_VARARGS },
-		{ "GetMailData",				mailGetMailData,						METH_VARARGS },
-		{ "GetMailDict",				mailGetMailDict,						METH_VARARGS },
-		{ "GetMailItemAttribute",		mailGetMailItemAttribute,				METH_VARARGS },
-		{ "GetMailItemData",			mailGetMailItemData,					METH_VARARGS },
-		{ "GetMailItemMetinSocket",		mailGetMailItemMetinSocket,				METH_VARARGS },
-		{ NULL,							NULL,									NULL		 },
-	};
-
-	PyObject* poModule = Py_InitModule("mail", s_methods);
-
 	/*GC*/
 	//using enum CPythonMail::EMAILBOX_GC;
 	PyModule_AddIntConstant(poModule, "MAILBOX_GC_OPEN", CPythonMail::EMAILBOX_GC::MAILBOX_GC_OPEN);
@@ -305,5 +290,4 @@ void initmail()
 	PyModule_AddIntConstant(poModule, "POST_WRITE_LEVEL_NOT_ENOUGHT", CPythonMail::EMAILBOX_POST_WRITE::POST_WRITE_LEVEL_NOT_ENOUGHT);
 	PyModule_AddIntConstant(poModule, "POST_WRITE_USE_TIME_LIMIT", CPythonMail::EMAILBOX_POST_WRITE::POST_WRITE_USE_TIME_LIMIT);
 	/*POST_WRITE END*/
-}
 }
