@@ -81,8 +81,8 @@ typedef struct packet_mailbox_add_data
 
 typedef struct packet_mailbox_message
 {
-	__time32_t						SendTime;
-	__time32_t						DeleteTime;
+	time_t							SendTime;
+	time_t							DeleteTime;
 	char							szTitle[25 + 1];
 	bool							bIsGMPost;
 	bool							bIsItemExist;

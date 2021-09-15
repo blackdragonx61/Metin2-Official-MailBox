@@ -30,12 +30,12 @@ public:
 
 	struct SMailBox
 	{
-		SMailBox(const __time32_t _SendTime, const __time32_t _DeleteTime, const char* _Title, const bool _IsGM,
+		SMailBox(const time_t _SendTime, const time_t _DeleteTime, const char* _Title, const bool _IsGM,
 			const bool _IsItem, const bool _IsConfirm);
 		~SMailBox();
 		void ResetAddData();
-		__time32_t							Sendtime;
-		__time32_t							Deletetime;
+		time_t								Sendtime;
+		time_t								Deletetime;
 		std::string							sTitle;
 		bool								bIsGMPost;
 		bool								bIsItemExist;

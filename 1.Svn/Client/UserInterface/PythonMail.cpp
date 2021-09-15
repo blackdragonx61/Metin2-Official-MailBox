@@ -50,7 +50,7 @@ void CPythonMail::AddMail(CPythonMail::SMailBox* mail)
 
 // SMailBox:
 
-CPythonMail::SMailBox::SMailBox(const __time32_t _SendTime, const __time32_t _DeleteTime, const char* _Title,
+CPythonMail::SMailBox::SMailBox(const time_t _SendTime, const time_t _DeleteTime, const char* _Title,
 	const bool _IsGM, const bool _IsItem, const bool _IsConfirm) :
 	Sendtime(_SendTime),
 	Deletetime(_DeleteTime),

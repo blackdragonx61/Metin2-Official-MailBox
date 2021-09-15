@@ -45,10 +45,10 @@ void CClientManager::QUERY_MAILBOX_LOAD(CPeer* pkPeer, DWORD dwHandle, TMailBox*
 
 	if (vec)
 	{
-		const __time32_t now = std::time(nullptr);
+		const time_t now = time(nullptr);
 
 		vec->erase(std::remove_if(vec->begin(), vec->end(),
-				[now](const TMailBoxTable& mail) { return mail.bIsDeleted || std::difftime(mail.Message.DeleteTime, now) <= 0; }), vec->end());
+				[now](const TMailBoxTable& mail) { return mail.bIsDeleted || difftime(mail.Message.DeleteTime, now) <= 0; }), vec->end());
 
 		std::sort(vec->begin(), vec->end(), [](const TMailBoxTable& l, const TMailBoxTable& r) {
 			return l.Message.SendTime > r.Message.SendTime;
@@ -90,13 +90,13 @@ void CClientManager::QUERY_MAILBOX_CHECK_NAME(CPeer* pkPeer, DWORD dwHandle, TMa
 		auto it = m_map_mailbox.find(p->szName);
 		if (it != m_map_mailbox.end())
 		{
-			const __time32_t now = time(nullptr);
+			const time_t now = time(nullptr);
 			for (const SMailBoxTable& mail : it->second)
 			{
 				if (mail.bIsDeleted)
 					continue;
 
-				if (std::difftime(mail.Message.DeleteTime, now) <= 0)
+				if (difftime(mail.Message.DeleteTime, now) <= 0)
 					continue;
 
 				t.Index++;
@@ -171,7 +171,7 @@ void CClientManager::QUERY_MAILBOX_UNREAD(CPeer* pkPeer, DWORD dwHandle, TMailBo
 	if (mailvec.empty())
 		return;
 	
-	const __time32_t now = time(nullptr);
+	const time_t now = time(nullptr);
 	TMailBoxRespondUnreadData t;
 	
 	for (const SMailBoxTable& mail : it->second)
@@ -182,7 +182,7 @@ void CClientManager::QUERY_MAILBOX_UNREAD(CPeer* pkPeer, DWORD dwHandle, TMailBo
 		if (mail.Message.bIsConfirm)
 			continue;
 		
-		if (std::difftime(mail.Message.DeleteTime, now) <= 0)
+		if (difftime(mail.Message.DeleteTime, now) <= 0)
 			continue;
 
 		if (mail.Message.bIsGMPost)
@@ -209,7 +209,7 @@ void CClientManager::MAILBOX_BACKUP()
 		return;
 
 	char s_szQuery[1024];
-	const __time32_t now = std::time(nullptr);
+	const time_t now = time(nullptr);
 
 	for (auto& p : m_map_mailbox)
 	{
@@ -218,7 +218,7 @@ void CClientManager::MAILBOX_BACKUP()
 			continue;
 		
 		mailvec.erase(std::remove_if(mailvec.begin(), mailvec.end(),
-			[now](const TMailBoxTable& mail) { return mail.bIsDeleted || std::difftime(mail.Message.DeleteTime, now) <= 0; }), mailvec.end());
+			[now](const TMailBoxTable& mail) { return mail.bIsDeleted || difftime(mail.Message.DeleteTime, now) <= 0; }), mailvec.end());
 
 		std::sort(mailvec.begin(), mailvec.end(), [](const TMailBoxTable& l, const TMailBoxTable& r) {
 			return l.Message.SendTime > r.Message.SendTime;
@@ -226,7 +226,7 @@ void CClientManager::MAILBOX_BACKUP()
 
 		for (const auto& mail : mailvec)
 		{
-			snprintf(s_szQuery, sizeof(s_szQuery), "INSERT INTO mailbox%s (name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, icount, socket0, socket1, socket2, attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) VALUES('%s', '%s', '%s', '%s', %d, %d, %ld, %ld, %d, %d, %lu, %lu, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
+			snprintf(s_szQuery, sizeof(s_szQuery), "INSERT INTO mailbox%s (name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, icount, socket0, socket1, socket2, attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) VALUES('%s', '%s', '%s', '%s', %d, %d, %ld, %ld, %d, %d, %lu, %lu, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
 				GetTablePostfix(),
 				mail.szName, mail.AddData.szFrom, mail.Message.szTitle, mail.AddData.szMessage,
 				mail.Message.bIsGMPost, mail.Message.bIsConfirm, mail.Message.SendTime, mail.Message.DeleteTime,

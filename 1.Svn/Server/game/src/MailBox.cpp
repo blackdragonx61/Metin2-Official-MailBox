@@ -16,6 +16,7 @@
 #include "db.h"
 #include "config.h"
 #include "desc_client.h"
+#include "log.h"
 
 CMailBox::CMailBox(const LPCHARACTER m_ch, const TMailBoxTable* pTable, const WORD Size)
 	: Owner(m_ch)
@@ -129,12 +130,12 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 	p.AddData.ItemCount = 0;
 	memset(p.AddData.alSockets, 0, sizeof(p.AddData.alSockets));
 	memset(p.AddData.aAttr, 0, sizeof(p.AddData.aAttr));
-	std::memcpy(p.Message.szTitle, szTitle, sizeof(p.Message.szTitle));
-	p.Message.bIsGMPost = Owner->IsGM();
 	
-	p.Message.bIsConfirm = false;
 	p.Message.SendTime = time(nullptr);
 	p.Message.DeleteTime = p.Message.SendTime + (p.Message.bIsGMPost ? EMAILBOX::MAILBOX_REMAIN_DAY_GM : EMAILBOX::MAILBOX_REMAIN_DAY) * 60 * 60 * 24;
+	std::memcpy(p.Message.szTitle, szTitle, sizeof(p.Message.szTitle));
+	p.Message.bIsGMPost = Owner->IsGM();
+	p.Message.bIsConfirm = false;
 
 	if (pos.IsValidItemPosition())
 	{
@@ -169,6 +170,8 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 
 	db_clientdesc->DBPacket(HEADER_GD_MAILBOX_WRITE, d->GetHandle(), &p, sizeof(p));
 	ServerProcess(EMAILBOX_GC::MAILBOX_GC_POST_WRITE, EMAILBOX_POST_WRITE::POST_WRITE_OK);
+
+	LogManager::Instance().MailLog(szName, Owner->GetName(), szTitle, szMessage, p.Message.bIsGMPost, p.AddData.ItemVnum, p.AddData.ItemCount, p.AddData.iYang, p.AddData.iWon);
 }
 
 /*static*/ void CMailBox::Open(const LPCHARACTER ch)
@@ -264,6 +267,38 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 
 	data->bHeader = HEADER_GC_MAILBOX_UNREAD;
 	d->Packet(&(*data), sizeof(TMailBoxRespondUnreadData));
+}
+
+/*static*/ void CMailBox::SendGMMail(const char* const cPlayerName, const char* const cTitle, const char* const cMessage, const DWORD dwItemVnum, const DWORD dwItemCount, const int iYang, const int iWon)
+{
+	TMailBoxTable p;
+	std::memcpy(p.szName, cPlayerName, sizeof(p.szName));
+	p.bIsDeleted = false;
+
+	p.AddData.bHeader = 0;
+	p.AddData.Index = 0;
+	static /*constexpr*/ const char* GM_NAME = "[GM]";
+	std::memcpy(p.AddData.szFrom, GM_NAME, sizeof(p.AddData.szFrom));
+	std::memcpy(p.AddData.szMessage, cMessage, sizeof(p.AddData.szMessage));
+	p.AddData.iYang = iYang;
+	p.AddData.iWon = iWon;
+	p.AddData.ItemVnum = dwItemVnum;
+	p.AddData.ItemCount = dwItemCount;
+	memset(p.AddData.alSockets, 0, sizeof(p.AddData.alSockets));
+	memset(p.AddData.aAttr, 0, sizeof(p.AddData.aAttr));
+	
+	p.Message.SendTime = time(nullptr);
+	p.Message.DeleteTime = p.Message.SendTime + (p.Message.bIsGMPost ? EMAILBOX::MAILBOX_REMAIN_DAY_GM : EMAILBOX::MAILBOX_REMAIN_DAY) * 60 * 60 * 24;
+	std::memcpy(p.Message.szTitle, cTitle, sizeof(p.Message.szTitle));
+	p.Message.bIsGMPost = true;
+	p.Message.bIsItemExist = p.AddData.ItemVnum > 0 || p.AddData.iYang > 0 || p.AddData.iWon > 0;
+	p.Message.bIsConfirm = false;
+
+	db_clientdesc->DBPacket(HEADER_GD_MAILBOX_WRITE, 0, &p, sizeof(p));
+
+	CMailBox::UnreadData(CHARACTER_MANAGER::Instance().FindPC(cPlayerName));
+
+	LogManager::Instance().MailLog(cPlayerName, GM_NAME, cTitle, cMessage, dwItemVnum, p.Message.bIsGMPost, dwItemCount, p.AddData.iYang, p.AddData.iWon);
 }
 
 void CMailBox::CheckPlayer(const char* const szName) const

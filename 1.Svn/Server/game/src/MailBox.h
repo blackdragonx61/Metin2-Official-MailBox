@@ -23,6 +23,7 @@ public:
 	static void Create(const LPCHARACTER ch, const TMailBoxTable* pTable, const WORD Size);
 	static void UnreadData(const LPCHARACTER ch);
 	static void ResultUnreadData(const LPCHARACTER ch, TMailBoxRespondUnreadData* data);
+	static void SendGMMail(const char* const cPlayerName, const char* const cTitle, const char* const cMessage, const DWORD dwItemVnum, const DWORD dwItemCount, const int iYang, const int iWon);
 	
 	void CheckPlayer(const char* const szName) const;
 	void CheckPlayerResult(const TMailBox* t);
