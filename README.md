@@ -13,6 +13,7 @@
 
 - GM Message Example:
 ```lua
+-- (name, title, message, vnum, count, yang, won)
 game.send_gm_mail("Mali61", "Test", "We are testing GM mail!", 39068, 25, 1461, 61)
 ```
 
