@@ -24,7 +24,7 @@ bool CClientManager::InitializeBanwordTable()
 bool CClientManager::InitializeMailBoxTable()
 {
 	if (m_map_mailbox.empty() == false)
-		return false;
+		return true;
 
 	char s_szQuery[512];
 	int len = sprintf(s_szQuery, "SELECT name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, icount, ");
