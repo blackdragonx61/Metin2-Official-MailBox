@@ -21,3 +21,5 @@ game.send_gm_mail("Mali61", "Test", "We are testing GM mail!", 39068, 25, 1461, 
 
 
 * You have to add [this](https://metin2.dev/board/topic/15220-gf-like-inventory-slot-marking-system/) too.
+
+* For using transmutation / change look, add [this](https://metin2.dev/board/topic/27957-official-transmutation-change-look/).
