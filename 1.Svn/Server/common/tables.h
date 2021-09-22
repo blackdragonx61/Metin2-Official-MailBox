@@ -77,6 +77,9 @@ typedef struct packet_mailbox_add_data
 	DWORD							ItemCount;
 	long							alSockets[ITEM_SOCKET_MAX_NUM];
 	TPlayerItemAttribute			aAttr[ITEM_ATTRIBUTE_MAX_NUM];
+#if defined(__BL_TRANSMUTATION__)
+	DWORD							dwTransmutationVnum;
+#endif
 } TPacketGCMailBoxAddData;
 
 typedef struct packet_mailbox_message

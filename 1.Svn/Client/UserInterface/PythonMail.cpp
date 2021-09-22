@@ -1,7 +1,5 @@
-/*
-* blackdragonx61 / Mali
-* 06.09.2021
-*/
+/// Blackdragonx61, Mali
+/// 06.09.2021
 
 #include "StdAfx.h"
 #include "PythonMail.h"
@@ -87,14 +85,21 @@ CPythonMail::SMailBox* CPythonMail::GetMail(const BYTE Index)
 
 // SMailBoxAddData:
 
-CPythonMail::SMailBoxAddData::SMailBoxAddData(const char* _From, const char* _Message, const int _Yang, const int _Won, 
-	const DWORD _ItemVnum, const DWORD _ItemCount, const long* _Sockets, const TPlayerItemAttribute* _Attrs) :
+CPythonMail::SMailBoxAddData::SMailBoxAddData(const char* _From, const char* _Message, const int _Yang, const int _Won,
+	const DWORD _ItemVnum, const DWORD _ItemCount, const long* _Sockets, const TPlayerItemAttribute* _Attrs
+#if defined(__BL_TRANSMUTATION__)
+	, const DWORD _TransmutationVnum
+#endif
+) :
 	sFrom(_From),
 	sMessage(_Message),
 	iYang(_Yang),
 	iWon(_Won),
 	ItemVnum(_ItemVnum),
 	ItemCount(_ItemCount)
+#if defined(__BL_TRANSMUTATION__)
+	, dwTransmutationVnum(_TransmutationVnum)
+#endif
 {
 	std::memcpy(alSockets, _Sockets, sizeof(alSockets));
 	std::memcpy(aAttr, _Attrs, sizeof(aAttr));
@@ -203,6 +208,21 @@ PyObject* mailGetMailItemMetinSocket(PyObject* poSelf, PyObject* poArgs)
 	return Py_BuildValue("i", addData->alSockets[SocketIndex]);
 }
 
+#if defined(__BL_TRANSMUTATION__)
+PyObject* mailGetItemChangeLookVnum(PyObject* poSelf, PyObject* poArgs)
+{
+	BYTE Index;
+	if (!PyTuple_GetByte(poArgs, 0, &Index))
+		return Py_BadArgument();
+
+	const CPythonMail::SMailBoxAddData* addData = CPythonMail::Instance().GetMailAddData(Index);
+	if (addData == nullptr || addData->ItemVnum == 0)
+		return Py_BuildNone();
+
+	return Py_BuildValue("i", addData->dwTransmutationVnum);
+}
+#endif
+
 void initmail()
 {
 	static PyMethodDef s_methods[] =
@@ -213,6 +233,9 @@ void initmail()
 		{ "GetMailItemAttribute",		mailGetMailItemAttribute,				METH_VARARGS },
 		{ "GetMailItemData",			mailGetMailItemData,					METH_VARARGS },
 		{ "GetMailItemMetinSocket",		mailGetMailItemMetinSocket,				METH_VARARGS },
+#if defined(__BL_TRANSMUTATION__)
+		{ "GetItemChangeLookVnum",		mailGetItemChangeLookVnum,				METH_VARARGS },
+#endif
 		{ NULL,							NULL,									NULL		 },
 	};
 

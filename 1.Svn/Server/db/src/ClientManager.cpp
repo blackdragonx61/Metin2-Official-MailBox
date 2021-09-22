@@ -159,6 +159,9 @@ void CClientManager::QUERY_MAILBOX_GET(CPeer* pkPeer, DWORD dwHandle, TMailBox* 
 	mail->AddData.ItemCount = 0;
 	memset(mail->AddData.alSockets, 0, sizeof(mail->AddData.alSockets));
 	memset(mail->AddData.aAttr, 0, sizeof(mail->AddData.aAttr));
+#if defined(__BL_TRANSMUTATION__)
+	mail->AddData.dwTransmutationVnum = 0;
+#endif
 }
 
 void CClientManager::QUERY_MAILBOX_UNREAD(CPeer* pkPeer, DWORD dwHandle, TMailBox* p)
@@ -226,11 +229,19 @@ void CClientManager::MAILBOX_BACKUP()
 
 		for (const auto& mail : mailvec)
 		{
+#if defined(__BL_TRANSMUTATION__)
+			snprintf(s_szQuery, sizeof(s_szQuery), "INSERT INTO mailbox%s (name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, transmutation, icount, socket0, socket1, socket2, attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) VALUES('%s', '%s', '%s', '%s', %d, %d, %ld, %ld, %d, %d, %lu, %lu, %ld, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
+#else
 			snprintf(s_szQuery, sizeof(s_szQuery), "INSERT INTO mailbox%s (name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, icount, socket0, socket1, socket2, attrtype0, attrvalue0, attrtype1, attrvalue1, attrtype2, attrvalue2, attrtype3, attrvalue3, attrtype4, attrvalue4, attrtype5, attrvalue5, attrtype6, attrvalue6) VALUES('%s', '%s', '%s', '%s', %d, %d, %ld, %ld, %d, %d, %lu, %lu, %ld, %ld, %ld, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %d)",
+#endif	
 				GetTablePostfix(),
 				mail.szName, mail.AddData.szFrom, mail.Message.szTitle, mail.AddData.szMessage,
 				mail.Message.bIsGMPost, mail.Message.bIsConfirm, mail.Message.SendTime, mail.Message.DeleteTime,
+#if defined(__BL_TRANSMUTATION__)
+				mail.AddData.iYang, mail.AddData.iWon, mail.AddData.ItemVnum, mail.AddData.dwTransmutationVnum, mail.AddData.ItemCount,
+#else
 				mail.AddData.iYang, mail.AddData.iWon, mail.AddData.ItemVnum, mail.AddData.ItemCount,
+#endif
 				mail.AddData.alSockets[0], mail.AddData.alSockets[1], mail.AddData.alSockets[2],
 				mail.AddData.aAttr[0].bType, mail.AddData.aAttr[0].sValue,
 				mail.AddData.aAttr[1].bType, mail.AddData.aAttr[1].sValue,

@@ -33,3 +33,7 @@ if app.BL_MAILBOX:
 				attrSlot.append(mail.GetMailItemAttribute(index, i))
 
 			self.AddItemData(vnum, metinSlot, attrSlot)
+
+			if app.BL_TRANSMUTATION_SYSTEM:
+				changelookvnum = mail.GetItemChangeLookVnum( index )
+				self.AppendChangeLookInfoItemVnum(changelookvnum)

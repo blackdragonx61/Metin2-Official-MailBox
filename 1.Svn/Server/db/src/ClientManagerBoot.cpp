@@ -27,7 +27,11 @@ bool CClientManager::InitializeMailBoxTable()
 		return true;
 
 	char s_szQuery[512];
+#if defined(__BL_TRANSMUTATION__)
+	int len = sprintf(s_szQuery, "SELECT name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, transmutation, icount, ");
+#else
 	int len = sprintf(s_szQuery, "SELECT name, who, title, message, gm, confirm, send_time, delete_time, gold, won, ivnum, icount, ");
+#endif
 
 	for (BYTE i = 0; i < ITEM_SOCKET_MAX_NUM; i++)
 		len += sprintf(s_szQuery + len, "socket%d, ", i);
@@ -68,6 +72,9 @@ bool CClientManager::InitializeMailBoxTable()
 		str_to_number(mail.AddData.iYang, data[col++]);
 		str_to_number(mail.AddData.iWon, data[col++]);
 		str_to_number(mail.AddData.ItemVnum, data[col++]);
+#if defined(__BL_TRANSMUTATION__)
+		str_to_number(mail.AddData.dwTransmutationVnum, data[col++]);
+#endif
 		str_to_number(mail.AddData.ItemCount, data[col++]);
 		mail.Message.bIsItemExist = mail.AddData.ItemVnum > 0 || mail.AddData.iYang > 0 || mail.AddData.iWon > 0;
 

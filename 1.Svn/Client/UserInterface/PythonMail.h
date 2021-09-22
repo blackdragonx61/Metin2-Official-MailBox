@@ -14,7 +14,11 @@ public:
 	struct SMailBoxAddData
 	{
 		SMailBoxAddData(const char* _From, const char* _Message, const int _Yang, const int _Won, 
-			const DWORD _ItemVnum, const DWORD _ItemCount, const long* _Sockets, const TPlayerItemAttribute* _Attrs);
+			const DWORD _ItemVnum, const DWORD _ItemCount, const long* _Sockets, const TPlayerItemAttribute* _Attrs
+#if defined(__BL_TRANSMUTATION__)
+			, const DWORD _TransmutationVnum
+#endif
+		);
 		~SMailBoxAddData();
 		std::string							sFrom;
 		std::string							sMessage;
@@ -24,6 +28,9 @@ public:
 		DWORD								ItemCount;
 		long								alSockets[ITEM_SOCKET_SLOT_MAX_NUM];
 		TPlayerItemAttribute				aAttr[ITEM_ATTRIBUTE_SLOT_MAX_NUM];
+#if defined(__BL_TRANSMUTATION__)
+		DWORD								dwTransmutationVnum;
+#endif
 	};
 
 	SMailBoxAddData* GetMailAddData(const BYTE Index);

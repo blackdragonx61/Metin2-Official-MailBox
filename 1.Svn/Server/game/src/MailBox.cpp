@@ -130,6 +130,9 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 	p.AddData.ItemCount = 0;
 	memset(p.AddData.alSockets, 0, sizeof(p.AddData.alSockets));
 	memset(p.AddData.aAttr, 0, sizeof(p.AddData.aAttr));
+#if defined(__BL_TRANSMUTATION__)
+	p.AddData.dwTransmutationVnum = 0;
+#endif
 	
 	p.Message.SendTime = time(nullptr);
 	p.Message.DeleteTime = p.Message.SendTime + (p.Message.bIsGMPost ? EMAILBOX::MAILBOX_REMAIN_DAY_GM : EMAILBOX::MAILBOX_REMAIN_DAY) * 60 * 60 * 24;
@@ -156,6 +159,9 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 		p.AddData.ItemCount = pItem->GetCount();
 		std::memcpy(p.AddData.alSockets, pItem->GetSockets(), sizeof(p.AddData.alSockets));
 		std::memcpy(p.AddData.aAttr, pItem->GetAttributes(), sizeof(p.AddData.aAttr));
+#if defined(__BL_TRANSMUTATION__)
+		p.AddData.dwTransmutationVnum = pItem->GetTransmutationVnum();
+#endif
 
 		pItem->RemoveFromCharacter();
 		ITEM_MANAGER::instance().DestroyItem(pItem);
@@ -187,6 +193,9 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 		return;
 	
 	if (ch->GetMailBox() || ch->GetExchange() || ch->IsOpenSafebox() || ch->GetShopOwner() || ch->GetMyShop() || ch->IsCubeOpen()
+#if defined(__BL_TRANSMUTATION__)
+		|| ch->GetTransmutation()
+#endif
 #if defined(__BL_67_ATTR__)
 		|| ch->Is67AttrOpen()
 #endif
@@ -286,6 +295,9 @@ void CMailBox::Write(const char* const szName, const char* const szTitle, const 
 	p.AddData.ItemCount = dwItemCount;
 	memset(p.AddData.alSockets, 0, sizeof(p.AddData.alSockets));
 	memset(p.AddData.aAttr, 0, sizeof(p.AddData.aAttr));
+#if defined(__BL_TRANSMUTATION__)
+	p.AddData.dwTransmutationVnum = 0;
+#endif
 	
 	p.Message.SendTime = time(nullptr);
 	p.Message.DeleteTime = p.Message.SendTime + (p.Message.bIsGMPost ? EMAILBOX::MAILBOX_REMAIN_DAY_GM : EMAILBOX::MAILBOX_REMAIN_DAY) * 60 * 60 * 24;
@@ -470,6 +482,9 @@ bool CMailBox::GetItem(const BYTE data_idx, const bool bAll)
 
 		item->SetSockets(mail.AddData.alSockets);
 		item->SetAttributes(mail.AddData.aAttr);
+#if defined(__BL_TRANSMUTATION__)
+		item->SetTransmutationVnum(mail.AddData.dwTransmutationVnum);
+#endif
 		Owner->AutoGiveItem(item);
 	}
 
@@ -486,6 +501,9 @@ bool CMailBox::GetItem(const BYTE data_idx, const bool bAll)
 	memset(mail.AddData.alSockets, 0, sizeof(mail.AddData.alSockets));
 	memset(mail.AddData.aAttr, 0, sizeof(mail.AddData.aAttr));
 	mail.Message.bIsItemExist = false;
+#if defined(__BL_TRANSMUTATION__)
+	mail.AddData.dwTransmutationVnum = 0;
+#endif
 
 	/*Notify DB*/
 	TMailBox p;

@@ -11,6 +11,9 @@
 #ifndef ENABLE_CHEQUE_SYSTEM
 	PyModule_AddIntConstant(poModule, "ENABLE_CHEQUE_SYSTEM", 0);
 #endif
+#if !defined(__BL_TRANSMUTATION__)
+	PyModule_AddIntConstant(poModule, "BL_TRANSMUTATION_SYSTEM", false);
+#endif
 #else
 	PyModule_AddIntConstant(poModule, "BL_MAILBOX", false);
 #endif

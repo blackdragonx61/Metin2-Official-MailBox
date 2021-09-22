@@ -114,7 +114,11 @@ bool CPythonNetworkStream::RecvMailboxAddData()
 	}
 
 	_Data->bIsConfirm = true;
-	_AddData = new CPythonMail::SMailBoxAddData(p.szFrom, p.szMessage, p.iYang, p.iWon, p.ItemVnum, p.ItemCount, p.alSockets, p.aAttr);
+	_AddData = new CPythonMail::SMailBoxAddData(p.szFrom, p.szMessage, p.iYang, p.iWon, p.ItemVnum, p.ItemCount, p.alSockets, p.aAttr
+#if defined(__BL_TRANSMUTATION__)
+		, p.dwTransmutationVnum
+#endif
+	);
 	return true;
 }
 

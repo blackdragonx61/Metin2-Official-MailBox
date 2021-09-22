@@ -1333,9 +1333,9 @@ class PostWrite(ui.ScriptWindow):
 			return
 		# if player.GetAcceRefineWindowOpen() == 1:
 		# 	return
-		# if app.ENABLE_CHANGE_LOOK_SYSTEM:
-		# 	if player.GetChangeLookWindowOpen() == 1:
-		# 		return
+		if app.BL_TRANSMUTATION_SYSTEM:
+			if player.GetChangeLookWindowOpen() == 1:
+				return
 			
 		attachedSlotType	= mouseModule.mouseController.GetAttachedType()
 		attachedSlotPos		= mouseModule.mouseController.GetAttachedSlotNumber()
