@@ -5,7 +5,7 @@
 ///Add
 #if defined(__BL_MAILBOX__)
 		else if (!stricmp(pszFlag, "not_capture"))
-			pWin->RemoveFlag(UI::CWindow::NOT_CAPTURE);
+			pWin->AddFlag(UI::CWindow::FLAG_NOT_CAPTURE);
 #endif
 
 //Find

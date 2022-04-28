@@ -2,14 +2,6 @@
 #include "../UserInterface/Locale_inc.h"
 
 //Find
-				FLAG_RTL				= (1 << 11),	// Right-to-left
-
-///Add
-#if defined(__BL_MAILBOX__)
-				NOT_CAPTURE				= (1 << 12),
-#endif
-
-//Find
 			void Flash();
 
 ///Add
